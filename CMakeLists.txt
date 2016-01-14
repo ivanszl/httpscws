@@ -5,7 +5,7 @@ PROJECT(${MODULE_NAME})
 
 INCLUDE_DIRECTORIES(
 	${CMAKE_SOURCE_DIR}
-	/usr/local/mysql/include
+	/usr/local/include/scws
 )
 SET(SRC_LIST
 	httpscws.cpp)
