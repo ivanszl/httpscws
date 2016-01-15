@@ -36,7 +36,7 @@ $ mv dict.utf8.xdb /etc/scws
 
 # 安装httpscws
 $ cd httpscws
-$ cmake .
+$ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/httpscws
 $ make
 $ make install
 ```
