@@ -1,0 +1,71 @@
+#!/bin/bash
+# HTTPSCWS Startup script for the SCWS HTTP Server
+# this script create it by ivan at 2016.01.14.
+#
+# chkconfig: - 95 15
+# description: HTTPSCWS is an Chinese Word Segmentation System Based on the HTTP protocol.
+# processname: httpscws
+# pidfile: /var/run/httpscws.pid
+# config: /etc/scws/
+ 
+httpscws=/usr/local/httpscws/bin/httpscws
+httpscws_config=/etc/scws/
+pid=/var/run/httpscws.pid
+ 
+RETVAL=0
+prog="httpscws"
+ 
+# Source function library.
+. /etc/rc.d/init.d/functions
+ 
+# Source networking configuration.
+. /etc/sysconfig/network
+ 
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+[ -x $httpscws ] || exit 0
+ 
+# Start searchd daemons functions.
+start(){
+	if [ -e $pid ]; then
+		echo "$prog already running..."
+		exit 1
+	fi
+	echo -n $"Starting $prog:"
+	daemon $httpscws -l 127.0.0.1 -d -i ${pid} -x ${httpscws_config}
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && touch /var/lock/subsys/httpscws
+	return $RETVAL
+}
+ 
+# Stop searchd daemons functions.
+stop(){
+	echo -n $"Stopping $prog:"
+	killproc $httpscws
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f /var/lock/subsys/httpscws $pid
+}
+ 
+# See how we were called.
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	status)
+		status $prog
+		RETVAL=$?
+		;;
+	*)
+		echo $"Usage: $prog {start|stop|restart|status|help}"
+		exit 1
+	esac
+exit $RETVAL
